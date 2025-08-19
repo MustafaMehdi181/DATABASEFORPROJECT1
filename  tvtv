@@ -1,0 +1,38 @@
+// app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Contact } from './models/contact.model';
+import { MOCK_CONTACTS } from './mock-contacts';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  contacts: Contact[] = [];
+  filter: string = 'All';
+  selectedContact?: Contact;
+
+  ngOnInit() {
+    this.contacts = MOCK_CONTACTS;
+  }
+
+  setFilter(filter: string) {
+    this.filter = filter;
+    this.selectedContact = undefined; // reset selection when changing filter
+  }
+
+  get filteredContacts(): Contact[] {
+    if (this.filter === 'All') return this.contacts;
+    return this.contacts.filter(c => c.groups.includes(this.filter));
+  }
+
+  selectContact(contact: Contact) {
+    this.selectedContact = contact;
+  }
+
+  updateContact(updated: Contact) {
+    this.contacts = this.contacts.map(c => c.id === updated.id ? updated : c);
+    this.selectedContact = updated;
+  }
+}
